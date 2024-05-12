@@ -37,6 +37,7 @@ def check(txt, pat):
     Returns:
         True if the pattern is found in the string, else False
     """
+
     m = len(pat)
     n = len(txt)
 
@@ -65,16 +66,22 @@ def scan(path):
         A tuple with the path to the file and the type of malicious content if found, else an empty tuple
     """
 
-    malicious_files = {}
+    # Initialize
+    malicious_files = ()
     df = pd.read_csv('database.csv')
+
+    # Open the file in binary mode and read the file as a hex string
     with open(path, 'rb') as f:
         bin = f.read().hex()
+
+        # Iterating through the database to check if the file is malicious
         for index, data in df.iterrows():
             if check(bin, data['Signature']):
                 malicious_files = (path, data['Type'])
                 break
         if len(malicious_files) == 0:
             print(path, ' is clean.')
+
     return malicious_files
 
 
@@ -87,19 +94,24 @@ def scan_folder(folder_selected, type):
             'delete' to scan and delete the malicious files
             'just scan' to just scan the folder
     """
+
     malicious_files = []
+    # Iterating through the folder to scan each file
     for root, dir_name, file_name in os.walk(folder_selected):
         for f in file_name:
             path = os.path.join(root, f)
             temp = scan(path)
             if len(temp) > 0:
                 malicious_files.append(temp)
+                
     if len(malicious_files) == 0:
         print('\nSadly I couldn\'t find any malicious files. Your folder is clean.')
     else:
+        # Printing the list of malicious files
         print('List of malicious files: ')
         for path, file_type in malicious_files:
             print(path, 'is a', file_type)
+            
     if type == 'delete':
         print('Deleting malicious files.')
         for path, file_type in malicious_files:
@@ -116,6 +128,7 @@ def scan_file(file_selected, type):
             'delete' to scan and delete the malicious file
             'just scan' to just scan the file
     """
+    
     temp = scan(file_selected)
     if len(temp) > 0:
         print(file_selected, 'is a', temp[1])
