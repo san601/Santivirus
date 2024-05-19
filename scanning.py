@@ -60,7 +60,7 @@ def scan(path):
     """Scans a file for malicious content and returns the type of malicious content
 
     Args:
-        path: The path to the file to be scanned
+        path (str): The path to the file to be scanned
 
     Returns:
         A tuple with the path to the file and the type of malicious content if found, else an empty tuple
