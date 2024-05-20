@@ -1,9 +1,7 @@
 from tkinter import *
 import subprocess
 from tkinter import filedialog
-
 import ttkbootstrap as tb
-from scanning import *
 
 root = tb.Window(themename='darkly')
 
@@ -41,18 +39,23 @@ def scanner():
         file_label.config(text=file_path)
         if choice.get() == 'Just scan':
             result = subprocess.run(['python', '.\\scanning.py', file_path, 'scan'], stdout=subprocess.PIPE)
-        else:
+        elif choice.get() == 'Scan and delete':
             result = subprocess.run(['python', '.\\scanning.py', file_path, 'delete'], stdout=subprocess.PIPE)
+
+        output_text['state'] = 'normal'
         output_text.delete(1.0, 'end')  # Clear previous output
         output_text.insert('end', result.stdout.decode())  # Insert captured output
         output_text.see('end')
+        output_text['state'] = 'disabled'
+
         print(result)
     else:
         file_label.config(text='No path selected')
 
 
 def toggle_upload_type():
-    """Toggle between file and directory upload. Change the text of the toggle_button accordingly."""
+    """Toggle between file and directory upload.
+    Change the text of the toggle_button accordingly."""
     global upload_type
     if upload_type == 'file':
         upload_type = 'directory'
@@ -88,7 +91,9 @@ image_button.bind('<Button-1>', lambda event: file_dialog())
 
 # Create a dropdown menu
 CHOICES = ['Just scan', 'Scan and delete']
-choice = tb.Combobox(root, values=CHOICES)
+# make a combobox with the given choices and read only
+choice = tb.Combobox(root, values=CHOICES, state='readonly')
+
 choice.pack(pady=10)
 choice.current(0)  # Set the default option to 'Just scan'
 
@@ -101,7 +106,7 @@ my_label = tb.Label(text='Scan results', font=('Helvetica', 30))
 my_label.pack(pady=20)
 
 # Create a text widget to display the output
-output_text = Text(root, width=200, height=12, wrap='word', font=('Helvetica', 14))
+output_text = Text(root, width=200, height=12, wrap='word', font=('Helvetica', 14), state='disabled')
 output_text.pack()
 
 root.mainloop()
