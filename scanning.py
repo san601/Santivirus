@@ -60,7 +60,7 @@ def scan(path):
     """Scans a file for malicious content and returns the type of malicious content
 
     Args:
-        path (str): The path to the file to be scanned
+        path: The path to the file to be scanned
 
     Returns:
         A tuple with the path to the file and the type of malicious content if found, else an empty tuple
@@ -103,7 +103,7 @@ def scan_folder(folder_selected, type):
             temp = scan(path)
             if len(temp) > 0:
                 malicious_files.append(temp)
-                
+
     if len(malicious_files) == 0:
         print('\nSadly I couldn\'t find any malicious files. Your folder is clean.')
     else:
@@ -111,12 +111,13 @@ def scan_folder(folder_selected, type):
         print('List of malicious files: ')
         for path, file_type in malicious_files:
             print(path, 'is a', file_type)
-            
+
     if type == 'delete':
-        print('Deleting malicious files.')
-        for path, file_type in malicious_files:
-            os.remove(path)
-            print('Deletion complete.')
+        if len(malicious_files) != 0:
+            print('Deleting malicious files.')
+            for path, file_type in malicious_files:
+                os.remove(path)
+                print('Deletion complete.')
 
 
 def scan_file(file_selected, type):
@@ -128,7 +129,7 @@ def scan_file(file_selected, type):
             'delete' to scan and delete the malicious file
             'just scan' to just scan the file
     """
-    
+
     temp = scan(file_selected)
     if len(temp) > 0:
         print(file_selected, 'is a', temp[1])
