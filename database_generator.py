@@ -6,7 +6,7 @@ type = ['Virus', 'Worm', 'Trojan']
 
 data = []
 
-for t in range(10**3):
+for t in range(10**2):
     a = [charset[random.randint(0, len(charset) - 1)] for i in range(32)]
     signature = ''.join(a)
     malware_type = random.choice(type)
